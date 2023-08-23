@@ -20,7 +20,7 @@ with open(teammapping_file_full, 'r') as f:
 
 teams = [name for name in dict_full.values()]
 
-weeks = [str(w) for w in range(1, 17)]
+weeks = [str(w) for w in range(1, len(scores))]
 
 
 df_total_scores = pd.DataFrame()
@@ -44,18 +44,17 @@ standings = pd.read_json(standings_file, orient = 'index')['league'][0][1]['stan
 for team in standings:
     if team != 'count':
         df_wins.loc[teams[int(standings[team]['team'][0][19]['managers'][0]['manager']['manager_id'])-1]] = int(standings[team]['team'][2]['team_standings']['outcome_totals']['wins'])
-
+#%%
 df_wins["Points Wins"] = 0
 for week in range(1, CURRENT_WEEK + 1):
     for team, _ in df_total_scores[str(week)].nlargest(6).iteritems():
         df_wins.loc[team, 'Points Wins'] = int(1 + df_wins.loc[team]['Points Wins'])
-
+#%%
 df_wins.index = df_wins.index.rename('Team')
 df_wins['Total Wins'] = df_wins['Matchup Wins'] + df_wins['Points Wins']
-df_wins["Position"] = df_wins["Total Wins"].rank(
-    method="dense", ascending=False)
+df_wins["Position"] = df_wins["Total Wins"].rank(method="dense", ascending=False)
 df_wins = df_wins.sort_values(by=["Position"])
-
+#%%
 file_name = 'Standings_Week' + str(CURRENT_WEEK) + '.xlsx'
 df_wins.to_excel(file_name)
 # %%
