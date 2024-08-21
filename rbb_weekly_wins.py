@@ -30,7 +30,7 @@ for week in scores:
     df_scores = df_scores.rename(columns=dict_full)
     
     week_id = week.name.split('wk_')[1].split('_')[0]
-    positions = ['QB', 'WR1', 'WR2', 'RB1', 'RB2', 'TE', 'W/R/T', 'K', 'DEF']
+    positions = ['QB', 'WR1', 'WR2', 'RB1', 'RB2', 'TE', 'W/R/T', 'K', 'DEF', 'IR']
     for manager in df_scores:
         df_total_scores.loc[manager, week_id] = df_scores.loc[positions, manager].sum()
 
